@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#2D2A26"/>
+  <rect x="80" y="120" width="280" height="320" rx="16" fill="#C8553D"/>
+  <rect x="96" y="136" width="248" height="288" rx="10" fill="#FFFBF5"/>
+  <rect x="120" y="175" width="200" height="14" rx="7" fill="#EDE5D8"/>
+  <rect x="120" y="203" width="160" height="10" rx="5" fill="#EDE5D8"/>
+  <rect x="120" y="225" width="180" height="10" rx="5" fill="#EDE5D8"/>
+  <rect x="120" y="247" width="140" height="10" rx="5" fill="#EDE5D8"/>
+  <!-- headphones -->
+  <path d="M340 300 Q400 280 400 340 Q400 370 380 370 L365 370 Q350 370 350 355 L350 330 Q350 315 365 315 L375 315 Q360 295 340 300Z" fill="#2D2A26"/>
+  <path d="M280 300 Q220 280 220 340 Q220 370 240 370 L255 370 Q270 370 270 355 L270 330 Q270 315 255 315 L245 315 Q260 295 280 300Z" fill="#2D2A26"/>
+  <path d="M240 305 Q310 260 380 305" fill="none" stroke="#2D2A26" stroke-width="16" stroke-linecap="round"/>
+</svg>

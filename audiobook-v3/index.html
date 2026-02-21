@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>English Audiobook</title>
+
+<!-- ── PWA Meta ─────────────────────────────────── -->
+<meta name="description" content="Nauka angielskiego przez słuchanie i ćwiczenia. Generuj teksty z AI i ucz się ze spersonalizowanych lekcji.">
+<meta name="theme-color" content="#2D2A26">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Audiobook">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="English Audiobook">
+
+<!-- ── OG / Social ──────────────────────────────── -->
+<meta property="og:title" content="English Audiobook">
+<meta property="og:description" content="Nauka angielskiego przez słuchanie i ćwiczenia">
+<meta property="og:type" content="website">
+
+<!-- ── Manifest ─────────────────────────────────── -->
+<link rel="manifest" href="manifest.json">
+
+<!-- ── Apple icons ──────────────────────────────── -->
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96.png">
+
+<!-- ── Splash screens (iOS) ─────────────────────── -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<!-- ── CSS ──────────────────────────────────────── -->
+<link rel="stylesheet" href="css/app.css">
+
+<!-- ── Preconnect ───────────────────────────────── -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+<!-- ── React (CDN) ──────────────────────────────── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+
+<!-- App root -->
+<div id="root"></div>
+
+<!-- Offline fallback message (shown only without JS) -->
+<noscript>
+  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;color:#5C574F;text-align:center;padding:20px">
+    <p>Ta aplikacja wymaga JavaScript.<br>Włącz JavaScript i odśwież stronę.</p>
+  </div>
+</noscript>
+
+<!-- Data (word dictionary) -->
+<script src="js/data.js"></script>
+
+<!-- App -->
+<script src="js/app.js"></script>
+
+<!-- ── Service Worker registration ──────────────── -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+      console.log('[App] SW registered:', reg.scope);
+
+      // Check for updates
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            console.log('[App] New SW ready, notifying app...');
+            // Will trigger the update toast in React
+          }
+        });
+      });
+
+      // Periodic update check (every 60s when tab is visible)
+      let updateInterval;
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          reg.update();
+          updateInterval = setInterval(() => reg.update(), 60000);
+        } else {
+          clearInterval(updateInterval);
+        }
+      });
+    } catch (err) {
+      console.warn('[App] SW registration failed:', err);
+    }
+  });
+
+  // Listen for SW controller change (new version activated)
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    console.log('[App] New SW activated');
+  });
+}
+
+// iOS standalone detection
+if (window.navigator.standalone) {
+  document.documentElement.classList.add('ios-standalone');
+}
+
+// Android TWA detection
+if (document.referrer.startsWith('android-app://')) {
+  document.documentElement.classList.add('android-twa');
+}
+</script>
+</body>
+</html>
